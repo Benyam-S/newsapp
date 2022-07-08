@@ -1,0 +1,15 @@
+{
+  "name": "newsapp",
+  "version": "1.0.0",
+  "description": "This is a news app the fetchs article from NewsAPI and display them to users",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "express-handlebars": "^6.0.6"
+  }
+}
