@@ -1,15 +1,29 @@
 {
   "name": "newsapp",
   "version": "1.0.0",
-  "description": "This is a news app the fetchs article from NewsAPI and display them to users",
+  "description": "This is a news app the fetches article from NewsAPI and display them to users",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rm -rf build && mkdir build",
+    "build-server": "babel --out-dir ./build . --source-maps --copy-files --ignore 'node_modules/**/*.js'",
+    "build": "npm run clean && npm run build-server",
+    "start": "pm2 start ./build/app.js -i ${NODE_PROCESSES} --no-daemon",
+    "dev": "NODE_ENV=development nodemon --exec babel-node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "express-handlebars": "^6.0.6"
+    "express-handlebars": "^6.0.6",
+    "nodemon": "^2.0.19",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.18.6",
+    "@babel/core": "^7.18.6",
+    "@babel/node": "^7.18.6",
+    "@babel/preset-env": "^7.18.6"
   }
 }
