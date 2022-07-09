@@ -1,5 +1,7 @@
+// Function for creating new article entity
 export default (
   id,
+  category,
   source = {},
   author = "",
   title = "",
@@ -10,6 +12,7 @@ export default (
   content = ""
 ) => ({
   id,
+  category,
   source,
   author,
   title,
