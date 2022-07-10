@@ -12,7 +12,10 @@ export default function articleRouter(express) {
     articleRepositoryImpl
   );
 
+  // Setting the routes for the article request handlers
   router.route("/").get(controller.fetchAllArticles);
+  router.route("/:category").get(controller.fetchArticlesByCategory);
+  router.route("/:category/:id").get(controller.fetchArticleById);
 
   return router;
 }
