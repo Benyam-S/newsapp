@@ -2544,9 +2544,6 @@ let storedArticles = [
 
 // articleRepository is a function that implements all the repository functions of the article entity
 export default function articleRepository() {
-  // findAll is a function that returns all the stored articles
-  const findAll = () => storedArticles;
-
   // findById is a function that returns an article that matches the give id
   const findById = (id) => {
     let article;
@@ -2560,19 +2557,62 @@ export default function articleRepository() {
     return article;
   };
 
-  // findByCategory is a function that returns all the articles for the given category
-  const findByCategory = (category) =>
-    storedArticles.filter((element) => element.category == category);
+  // findByTitle is a function that returns an article that matches the give title
+  const findByTitle = (title, category) => {
+    let article;
+    storedArticles.forEach((element) => {
+      if (element.title.includes(title) && element.category == category) {
+        article = element;
+        return;
+      }
+    });
 
-  // searchByTitle is a function that returns articles that contains the title value
-  const searchByTitle = (title, category) => {
-    if (category == CATEGORY_ALL) {
-      return storedArticles.filter((article) => article.title.includes(title));
+    return article;
+  };
+
+  // findByCategory is a function that returns all the articles for the given category
+  const findByCategory = (category, pageNum, perPage, sortBy) => {
+    let total = sorted(sortBy);
+    if (category != CATEGORY_ALL) {
+      total = total.filter((article) => article.category == category);
     }
 
-    return storedArticles.filter(
-      (article) => article.title.includes(title) && article.category == category
-    );
+    let totalCount = total.length;
+    let firstIndex = (pageNum <= 0 ? 0 : pageNum - 1) * perPage;
+    let lastIndex = pageNum * perPage; // Since their is no index out of bound error
+    let pageCount = Math.ceil(totalCount / perPage);
+
+    if (totalCount > firstIndex) {
+      return { pageCount, articles: total.slice(firstIndex, lastIndex) };
+    }
+
+    return { pageCount, articles: [] };
+  };
+
+  // searchByTitle is a function that returns articles that contains the title value
+  const searchByTitle = (title, category, pageNum, perPage, sortBy) => {
+    let total = sorted(sortBy);
+    if (category == CATEGORY_ALL) {
+      total = storedArticles.filter((article) =>
+        article.title.toLowerCase().includes(title.toLowerCase())
+      );
+    } else {
+      total = storedArticles.filter(
+        (article) =>
+          article.title.includes(title) && article.category == category
+      );
+    }
+
+    let totalCount = total.length;
+    let firstIndex = (pageNum <= 0 ? 0 : pageNum - 1) * perPage;
+    let lastIndex = pageNum * perPage; // Since their is no index out of bound error
+    let pageCount = Math.ceil(totalCount / perPage);
+
+    if (totalCount > firstIndex) {
+      return { pageCount, articles: total.slice(firstIndex, lastIndex) };
+    }
+
+    return { pageCount, articles: [] };
   };
 
   // add is a function that adds new article entity to the stored articles
@@ -2599,9 +2639,45 @@ export default function articleRepository() {
     });
   };
 
+  const sorted = (sortBy) => {
+    if (sortBy == "newest") {
+      return storedArticles.sort((a, b) => {
+        let da = new Date(a.publishedAt);
+        let db = new Date(b.publishedAt);
+        return da - db;
+      });
+    } else if (sortBy == "oldest") {
+      return storedArticles.sort((a, b) => {
+        let da = new Date(a.publishedAt);
+        let db = new Date(b.publishedAt);
+        return db - da;
+      });
+    } else if (sortBy == "asc") {
+      return storedArticles.sort((a, b) => {
+        if (a.title < b.title) {
+          return -1;
+        } else if (a.title > b.title) {
+          return 1;
+        }
+        return 0;
+      });
+    } else if (sortBy == "desc") {
+      return storedArticles.sort((a, b) => {
+        if (a.title > b.title) {
+          return -1;
+        } else if (a.title < b.title) {
+          return 1;
+        }
+        return 0;
+      });
+    }
+
+    return [...storedArticles];
+  };
+
   return {
-    findAll,
     findById,
+    findByTitle,
     findByCategory,
     searchByTitle,
     add,

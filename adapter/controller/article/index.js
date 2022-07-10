@@ -1,4 +1,5 @@
 import articleUC from "../../../application/use_cases/article";
+import { CATEGORY_ALL } from "../../../entities/constants";
 
 // articleController is a controller function defines all the article related controller functions
 export default function articleController(
@@ -8,25 +9,14 @@ export default function articleController(
   const repository = articleRepository(articleRepositoryImpl());
   const articleUseCase = articleUC(repository);
 
-  // fetchAllArticles is a request handler function that fetches all the articles in the system
-  const fetchAllArticles = (req, res, next) => {
-    let response = {
-      status: "ok",
-      articles: articleUseCase.findAll(repository),
-    };
-
-    // Setting status code to ok and sending the json response
-    res.status(200).json(response);
-  };
-
-  // fetchArticleById is a request handler function that fetches an articles from system using the article id
-  const fetchArticleById = (req, res, next) => {
-    let id = req.params.id;
+  // fetchArticleByTitle is a request handler function that fetches an articles from system using the article title
+  const fetchArticleByTitle = (req, res, next) => {
+    let title = req.params.title;
     let category = req.params.category;
-    let article = articleUseCase.findById(id, repository);
+    let article = articleUseCase.findByTitle(title, category, repository);
 
-    // Checking if the article is found and has correct category
-    if (article && article.category == category) {
+    // Checking if the article is found
+    if (article) {
       let response = {
         status: "ok",
         article,
@@ -46,28 +36,81 @@ export default function articleController(
   // fetchArticlesByCategory is a request handler function that fetches all the articles in the system based on their category
   const fetchArticlesByCategory = (req, res, next) => {
     let category = req.params.category;
+    let pageNum = req.query.page;
+    let sortBy = req.query.sortBy ?? "newest";
+    let perPage = 10;
+
+    try {
+      pageNum = parseInt(pageNum);
+    } catch (e) {
+      pageNum = 1;
+    }
+
+    let output = articleUseCase.findByCategory(
+      category ?? CATEGORY_ALL,
+      pageNum,
+      perPage,
+      sortBy
+    );
+
+    if (output.articles.length > 0) {
+      let response = {
+        status: "ok",
+        category,
+        articles: output.articles,
+        pageCount: output.pageCount,
+        pageNum,
+        perPage,
+        sortBy,
+      };
+
+      // Setting status code to ok and sending the json response
+      res.status(200).json(response);
+      return;
+    }
+
     let response = {
-      status: "ok",
+      status: "bad",
       category,
-      articles: articleUseCase.findByCategory(category, repository),
+      error: "no articles for the given category",
     };
 
     // Setting status code to ok and sending the json response
-    res.status(200).json(response);
+    res.status(400).json(response);
   };
 
   // searchArticles is a request handler function that searches articles based on the key
   const searchArticles = (req, res, next) => {
     let category = req.params.category;
     let key = req.query.q;
+    let pageNum = req.query.page;
+    let sortBy = req.query.sortBy ?? "newest";
+    let perPage = 10;
 
-    let articles = articleUseCase.searchByTitle(key, category, repository);
-    if (articles.length > 0) {
+    try {
+      pageNum = parseInt(pageNum);
+    } catch (e) {
+      pageNum = 1;
+    }
+
+    let output = articleUseCase.searchByTitle(
+      key,
+      category ?? CATEGORY_ALL,
+      pageNum,
+      perPage,
+      sortBy
+    );
+
+    if (output.articles.length > 0) {
       let response = {
         status: "ok",
         category,
         key,
-        articles,
+        articles: output.articles,
+        pageCount: output.pageCount,
+        pageNum,
+        perPage,
+        sortBy,
       };
 
       // Setting status code to ok and sending the json response
@@ -87,8 +130,7 @@ export default function articleController(
   };
 
   return {
-    fetchAllArticles,
-    fetchArticleById,
+    fetchArticleByTitle,
     fetchArticlesByCategory,
     searchArticles,
   };
