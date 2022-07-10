@@ -7,7 +7,7 @@ export default function serverConfig(app, config) {
   // Starting the web server
   function startServer() {
     // Fetching the news articles and populating them in the repository
-    initArticleService(articleRepository, categoryRepository, articleService());
+    // initArticleService(articleRepository, categoryRepository, articleService());
 
     // Starting the express server
     app.listen(

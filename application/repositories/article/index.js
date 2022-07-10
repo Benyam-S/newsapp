@@ -9,6 +9,10 @@ export default function articleRepository(repository) {
   // findByCategory is a repository function that returns all the articles for the given category
   const findByCategory = (category) => repository.findByCategory(category);
 
+  // searchByTitle is a repository function that returns articles that contains the given title value
+  const searchByTitle = (title, category) =>
+    repository.searchByTitle(title, category);
+
   // add is a repository function that adds new article entity to the repository
   const add = (article, category) => repository.add(article, category);
 
@@ -20,6 +24,7 @@ export default function articleRepository(repository) {
     findAll,
     findById,
     findByCategory,
+    searchByTitle,
     add,
     addMultiple,
   };

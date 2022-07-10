@@ -1,6 +1,4 @@
-import findAll from "../../../application/use_cases/article/findAll";
-import findById from "../../../application/use_cases/article/findById";
-import findByCategory from "../../../application/use_cases/article/findByCategory";
+import articleUC from "../../../application/use_cases/article";
 
 // articleController is a controller function defines all the article related controller functions
 export default function articleController(
@@ -8,12 +6,13 @@ export default function articleController(
   articleRepositoryImpl
 ) {
   const repository = articleRepository(articleRepositoryImpl());
+  const articleUseCase = articleUC(repository);
 
   // fetchAllArticles is a request handler function that fetches all the articles in the system
   const fetchAllArticles = (req, res, next) => {
     let response = {
       status: "ok",
-      articles: findAll(repository),
+      articles: articleUseCase.findAll(repository),
     };
 
     // Setting status code to ok and sending the json response
@@ -24,7 +23,7 @@ export default function articleController(
   const fetchArticleById = (req, res, next) => {
     let id = req.params.id;
     let category = req.params.category;
-    let article = findById(id, repository);
+    let article = articleUseCase.findById(id, repository);
 
     // Checking if the article is found and has correct category
     if (article && article.category == category) {
@@ -35,12 +34,13 @@ export default function articleController(
 
       // Setting status code to ok and sending the json response
       res.status(200).json(response);
-    } else {
-      res.status(400).json({
-        status: "bad",
-        error: "article not found",
-      });
+      return;
     }
+
+    res.status(400).json({
+      status: "bad",
+      error: "article not found",
+    });
   };
 
   // fetchArticlesByCategory is a request handler function that fetches all the articles in the system based on their category
@@ -49,16 +49,47 @@ export default function articleController(
     let response = {
       status: "ok",
       category,
-      articles: findByCategory(category, repository),
+      articles: articleUseCase.findByCategory(category, repository),
     };
 
     // Setting status code to ok and sending the json response
     res.status(200).json(response);
   };
 
+  // searchArticles is a request handler function that searches articles based on the key
+  const searchArticles = (req, res, next) => {
+    let category = req.params.category;
+    let key = req.query.q;
+
+    let articles = articleUseCase.searchByTitle(key, category, repository);
+    if (articles.length > 0) {
+      let response = {
+        status: "ok",
+        category,
+        key,
+        articles,
+      };
+
+      // Setting status code to ok and sending the json response
+      res.status(200).json(response);
+      return;
+    }
+
+    let response = {
+      status: "bad",
+      category,
+      key,
+      error: "no result for the given search key",
+    };
+
+    // Setting status code to ok and sending the json response
+    res.status(400).json(response);
+  };
+
   return {
     fetchAllArticles,
     fetchArticleById,
     fetchArticlesByCategory,
+    searchArticles,
   };
 }

@@ -1,6 +1,15 @@
 import bodyParser from "body-parser";
+import cors from "cors";
+import config from "../../config/config";
 
 export default function expressConfig(app) {
+  app.use(
+    cors({
+      origin: config.allowedOrigins,
+      optionsSuccessStatus: 200,
+    })
+  );
+
   // Setting parser
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(

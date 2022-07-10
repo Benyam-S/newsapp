@@ -15,6 +15,7 @@ export default function articleRouter(express) {
   // Setting the routes for the article request handlers
   router.route("/").get(controller.fetchAllArticles);
   router.route("/:category").get(controller.fetchArticlesByCategory);
+  router.route("/:category/search").get(controller.searchArticles);
   router.route("/:category/:id").get(controller.fetchArticleById);
 
   return router;
