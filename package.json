@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf build && mkdir build",
-    "build-server": "babel --out-dir ./build . --source-maps --copy-files --ignore 'node_modules/**/*.js'",
+    "build-server": "babel --out-dir ./build . --source-maps --copy-files --ignore 'node_modules/'",
     "build": "npm run clean && npm run build-server",
     "dev": "NODE_ENV=development nodemon --exec babel-node app.js"
   },
