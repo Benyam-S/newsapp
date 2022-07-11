@@ -32,7 +32,7 @@ export default function serviceController(emailService, emailServiceImpl) {
       text: `Thank you for subscribing to '${category.toUpperCase()}' news category! We will keep you updated.`,
     });
 
-    // Setting status code to ok and sending the json response
+    // Setting status code to ok
     res.status(200).end();
   };
 
