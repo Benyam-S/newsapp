@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default {
-  port: process.env.NUXT_ENV_PORT || 5000,
+  port: process.env.PORT || 5000,
   ip: process.env.NUXT_ENV_HOST || "127.0.0.1",
   allowedOrigins: [process.env.NUXT_ENV_ALLOWED_ORIGINS.split(", ")],
   newsAPIBaseURL: "https://newsapi.org/v2/top-headlines",
