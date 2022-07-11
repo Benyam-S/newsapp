@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf build && mkdir build",
-    "build-server": "babel --out-dir ./build . --source-maps --copy-files --ignore 'node_modules/'",
+    "build-server": "babel --out-dir ./build . --source-maps --copy-files --ignore 'node_modules/**/*.js'",
     "build": "npm run clean && npm run build-server",
     "dev": "NODE_ENV=development nodemon --exec babel-node app.js"
   },
@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
+    "babel-preset-env": "^1.7.0",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
