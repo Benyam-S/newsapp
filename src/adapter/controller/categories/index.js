@@ -1,10 +1,9 @@
+import categoryRepository from "../../../application/repositories/category";
 import categoryUC from "../../../application/use_cases/category";
+
 // categoryController is a controller function defines all the category related controller functions
-export default function categoryController(
-  categoryRepository,
-  categoryRepositoryImpl
-) {
-  const repository = categoryRepository(categoryRepositoryImpl());
+export default function categoryController(categoryRepositoryImpl) {
+  const repository = categoryRepository(categoryRepositoryImpl);
   const categoryUseCase = categoryUC(repository);
 
   // fetchAllCategories is a request handler function that fetches all the categories in the system

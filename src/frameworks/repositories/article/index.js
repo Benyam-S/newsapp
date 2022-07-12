@@ -8,7 +8,7 @@ let storedArticles = []; // Repository for the articles
 export default function articleRepository() {
   // findById is a function that returns an article that matches the give id
   const findById = (id) => {
-    let article;
+    let article = null;
     storedArticles.forEach((element) => {
       if (element.id == id) {
         article = element;
@@ -21,7 +21,7 @@ export default function articleRepository() {
 
   // findByTitle is a function that returns an article that matches the give title
   const findByTitle = (title, category) => {
-    let article;
+    let article = null;
     storedArticles.forEach((element) => {
       if (element.title.includes(title) && element.category == category) {
         article = element;
@@ -91,14 +91,20 @@ export default function articleRepository() {
       article.publishedAt,
       article.content
     );
+
     storedArticles.push(newArticle);
+    return newArticle;
   };
 
   // addMultiple is a function that adds multiple articles to the stored articles
   const addMultiple = (articles, category) => {
+    let addedArticles = [];
+
     articles.forEach((article) => {
-      add(article, category);
+      addedArticles.push(add(article, category));
     });
+
+    return addedArticles;
   };
 
   const sorted = (sortBy) => {
@@ -106,13 +112,13 @@ export default function articleRepository() {
       return storedArticles.sort((a, b) => {
         let da = new Date(a.publishedAt);
         let db = new Date(b.publishedAt);
-        return da - db;
+        return db - da;
       });
     } else if (sortBy == "oldest") {
       return storedArticles.sort((a, b) => {
         let da = new Date(a.publishedAt);
         let db = new Date(b.publishedAt);
-        return db - da;
+        return da - db;
       });
     } else if (sortBy == "asc") {
       return storedArticles.sort((a, b) => {

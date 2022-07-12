@@ -2,11 +2,6 @@ import { CATEGORY_ALL } from "../../../entities/constants";
 
 // articleUseCase is a function that defines all the use case function of the article entity
 export default function articleUseCase(articleRepo) {
-  // findById is a use case function that returns an article that matches the given id
-  const findById = (id) => {
-    return articleRepo.findById(id);
-  };
-
   // findByTitle is a use case function that returns an article that matches the given title
   const findByTitle = (title, category) => {
     return articleRepo.findByTitle(title, category);
@@ -34,7 +29,6 @@ export default function articleUseCase(articleRepo) {
   };
 
   return {
-    findById,
     findByTitle,
     findByCategory,
     searchByTitle,

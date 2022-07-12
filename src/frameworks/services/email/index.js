@@ -16,7 +16,7 @@ export default function emailService() {
     },
   });
 
-  // sendEmail is a function that sends email to provide email using nodemailer
+  // sendEmail is a function that sends email to the provide email using nodemailer
   const sendEmail = (from, to, subject, text) => {
     // Sending the email
     transport.sendMail({ from, to, subject, text }, (err) => {

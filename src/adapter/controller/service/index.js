@@ -1,10 +1,11 @@
+import emailService from "../../../application/services/email";
 import validationService from "../../../application/services/validation";
 import { CATEGORY_ALL } from "../../../entities/constants";
 
 // serviceController is a controller function defines all the service related controller functions
-export default function serviceController(emailService, emailServiceImpl) {
+export default function serviceController(emailServiceImpl) {
   let vService = validationService();
-  let eService = emailService(emailServiceImpl());
+  let eService = emailService(emailServiceImpl);
 
   // sendMail is a request handler function that handles email sending request
   const sendMail = (req, res, next) => {

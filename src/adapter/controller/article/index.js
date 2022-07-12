@@ -1,12 +1,10 @@
 import articleUC from "../../../application/use_cases/article";
+import articleRepository from "../../../application/repositories/article";
 import { CATEGORY_ALL } from "../../../entities/constants";
 
 // articleController is a controller function defines all the article related controller functions
-export default function articleController(
-  articleRepository,
-  articleRepositoryImpl
-) {
-  const repository = articleRepository(articleRepositoryImpl());
+export default function articleController(articleRepositoryImpl) {
+  const repository = articleRepository(articleRepositoryImpl);
   const articleUseCase = articleUC(repository);
 
   // fetchArticleByTitle is a request handler function that fetches an articles from system using the article title
@@ -47,7 +45,7 @@ export default function articleController(
     }
 
     let output = articleUseCase.findByCategory(
-      category ?? CATEGORY_ALL,
+      category,
       pageNum,
       perPage,
       sortBy
@@ -95,7 +93,7 @@ export default function articleController(
 
     let output = articleUseCase.searchByTitle(
       key,
-      category ?? CATEGORY_ALL,
+      category,
       pageNum,
       perPage,
       sortBy

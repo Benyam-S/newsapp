@@ -6,6 +6,7 @@ dotenv.config();
 export default {
   port: process.env.PORT || 5000,
   ip: process.env.NUXT_ENV_HOST || "127.0.0.1",
+  baseURL: process.env.NUXT_ENV_BASE_URL || "http://127.0.0.1:5000",
   allowedOrigins: [process.env.NUXT_ENV_ALLOWED_ORIGINS.split(", ")],
   newsAPIBaseURL: "https://newsapi.org/v2/top-headlines",
   newsAPIKey: process.env.NUXT_ENV_NEWS_API_KEY,

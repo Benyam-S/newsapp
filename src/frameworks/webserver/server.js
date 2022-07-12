@@ -1,16 +1,18 @@
-import initArticleService from "../../application/services/article";
-import articleRepository from "../../frameworks/repositories/article";
-import categoryRepository from "../../frameworks/repositories/category";
-import articleService from "../../frameworks/services/article";
+import articleService from "../../application/services/article";
+import articleServiceImpl from "../../frameworks/services/article";
 
 export default function serverConfig(app, config) {
   // Starting the web server
-  function startServer() {
+  function startServer({ articleRepository, categoryRepository }) {
     // Fetching the news articles and populating them in the repository
-    initArticleService(articleRepository, categoryRepository, articleService());
+    articleService(
+      articleRepository,
+      categoryRepository,
+      articleServiceImpl()
+    ).start();
 
     // Starting the express server
-    app.listen(
+    return app.listen(
       config.port,
       console.log(
         "Express server listening on %d, in %s mode",
