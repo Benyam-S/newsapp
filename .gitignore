@@ -1,8 +1,11 @@
 # Dependency directories
 node_modules/
 
-# the environment variable file
+# dotenv environment variables file
 .env
 
 # the build
 build
+
+# Coverage directory used by tools like istanbul
+coverage
